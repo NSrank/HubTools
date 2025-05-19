@@ -1,0 +1,5 @@
+name: HubTools_Paper
+version: 1.0.0
+main: org.plugin.hubtools_paper.HubTools_Paper
+api-version: '1.20'
+author: NSrank & Qwen2.5-Max
