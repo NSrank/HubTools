@@ -1,0 +1,13 @@
+{
+  "id": "hubtools",
+  "name": "HubTools",
+  "main": "org.plugin.hubtools.HubTools",
+  "version": "1.0.0",
+  "authors": ["NSrank & Qwen2.5-Max"],
+  "dependencies": [
+    {
+      "id": "velocity",
+      "version": "3.4.0"
+    }
+  ]
+}
