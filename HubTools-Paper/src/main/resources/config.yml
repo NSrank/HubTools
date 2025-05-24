@@ -1,0 +1,5 @@
+# HubTools-Paper 配置文件
+# 此插件用于接收来自Velocity的传送指令
+
+# 服务器名称 - 必须与Velocity配置中的服务器名称完全一致
+server-name: lobby

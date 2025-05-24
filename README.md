@@ -34,8 +34,9 @@
 ### 2. 安装Velocity端插件
 将 `HubTools.jar` 文件放入 Velocity 服务端的 `plugins/` 目录中。
 
-### 3. 安装Paper端插件（可选）
+### 3. 安装Paper端插件（必需）
 将配套的 `HubTools-Paper.jar` 放入所有下游服务器的 `plugins/` 目录（用于接收传送坐标）。
+**注意**：Paper端插件是独立项目，位于 `HubTools-Paper/` 目录中，需要单独构建。
 
 ### 4. 启动服务器
 首次启动 Velocity 服务端会自动生成配置文件 `plugins/HubTools/config.yml`。
@@ -57,6 +58,40 @@ z: 0.5
 - `x`：传送坐标的 X 轴值，默认为 `0.5`。
 - `y`：传送坐标的 Y 轴值，默认为 `64.0`。
 - `z`：传送坐标的 Z 轴值，默认为 `0.5`。
+
+---
+
+## 故障排除
+
+### 常见问题
+
+#### 1. Velocity与Paper端无法通信
+**症状**：玩家传送指令发送失败，Paper端收不到消息
+**解决方案**：
+- 确保使用了修复后的版本（v1.2.0+）
+- 检查Velocity端日志是否显示"成功发送传送指令到Paper服务器"
+- 确认Paper端配置中的`server-name`与Velocity配置一致
+- 验证插件消息通道`hubtools:teleport`已正确注册
+
+#### 2. 传送失败
+**症状**：收到传送指令但传送不成功
+**解决方案**：
+- 检查目标世界是否存在
+- 确认传送坐标是否有效（不在虚空中）
+- 查看Paper端控制台的详细错误信息
+
+#### 3. 玩家数据未清理
+**症状**：玩家重复传送或数据残留
+**解决方案**：
+- 确保传送成功后会自动清理玩家记录
+- 手动删除`plugins/HubTools/data.yml`中的残留数据
+
+### 技术细节
+
+#### 修复的关键问题
+1. **消息发送方向错误**：原版本使用`player.sendPluginMessage()`发送给客户端，现已修复为使用`ServerConnection.sendPluginMessage()`发送给Paper服务器
+2. **项目结构混乱**：分离了Velocity端和Paper端代码，避免构建冲突
+3. **错误处理改进**：增加了详细的日志记录和异常处理
 
 ---
 
@@ -145,7 +180,7 @@ z: 0.5
 ---
 
 ### Support & Feedback
-For issues or suggestions, contact us via:  
+For issues or suggestions, contact us via:
 - **GitHub Issues**: [Submit an issue](https://github.com/NSrank/HubTools/issues)
 
 ---

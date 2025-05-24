@@ -2,17 +2,17 @@ package org.plugin.hubtools;
 
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 
 public class HubToolsConfig {
+
     private final File configFile;
-    private String server;
-    private String world;
-    private double x;
-    private double y;
-    private double z;
+    private ConfigurationNode rootNode;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public HubToolsConfig(File configFile) {
         this.configFile = configFile;
@@ -20,38 +20,58 @@ public class HubToolsConfig {
     }
 
     private void load() {
+        YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
+                .file(configFile)
+                .build();
+
         try {
-            YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
-                    .file(configFile)
-                    .build();
-            ConfigurationNode rootNode = loader.load();
-            this.server = rootNode.node("server").getString();
-            this.world = rootNode.node("world").getString();
-            this.x = rootNode.node("x").getDouble();
-            this.y = rootNode.node("y").getDouble();
-            this.z = rootNode.node("z").getDouble();
+            if (!configFile.exists()) {
+                // 确保目录存在
+                if (!configFile.getParentFile().exists() && !configFile.getParentFile().mkdirs()) {
+                    throw new RuntimeException("无法创建插件目录: " + configFile.getParentFile().getAbsolutePath());
+                }
+
+                // 创建文件并写入默认配置
+                if (!configFile.createNewFile()) {
+                    throw new RuntimeException("无法创建配置文件: " + configFile.getAbsolutePath());
+                }
+
+                rootNode = loader.createNode();
+                rootNode.node("server").set("lobby");
+                rootNode.node("world").set("world");
+                rootNode.node("x").set(0.0);
+                rootNode.node("y").set(64.0);
+                rootNode.node("z").set(0.0);
+                loader.save(rootNode);
+
+                logger.info("默认配置文件已生成: {}", configFile.getAbsolutePath());
+                return;
+            }
+
+            // 加载现有配置
+            rootNode = loader.load();
         } catch (IOException e) {
-            throw new RuntimeException("配置加载失败！", e);
+            throw new RuntimeException("加载 config.yml 失败", e);
         }
     }
 
     public String getServer() {
-        return server;
+        return rootNode.node("server").getString("lobby");
     }
 
     public String getWorld() {
-        return world;
+        return rootNode.node("world").getString("world");
     }
 
     public double getX() {
-        return x;
+        return rootNode.node("x").getDouble(0.0);
     }
 
     public double getY() {
-        return y;
+        return rootNode.node("y").getDouble(64.0);
     }
 
     public double getZ() {
-        return z;
+        return rootNode.node("z").getDouble(0.0);
     }
 }

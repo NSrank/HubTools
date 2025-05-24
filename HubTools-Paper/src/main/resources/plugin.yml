@@ -1,0 +1,13 @@
+name: HubTools-Paper
+version: 1.1.0
+main: org.plugin.hubtools_paper.HubTools_Paper
+api-version: '1.20'
+author: NSrank & Qwen2.5-Max & Kimi
+description: Paper端传送接收插件，配合HubTools Velocity插件使用
+website: https://github.com/NSrank/HubTools
+
+# 软依赖 - 如果存在这些插件会更好地工作
+softdepend: []
+
+# 权限定义（如果需要的话）
+permissions: {}
